@@ -1,0 +1,73 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+body {
+    background-color: beige;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.pic {
+    width: 200px;
+    height: 250px;
+    background-image: url("stupid_cat.jpg");
+    background-size: 230%;
+    background-position: center;
+    /* Result in circle pic */
+    border-radius: 50%;
+    position: relative;
+}
+
+.pic::before,
+.pic::after {
+    --scale: 0;
+    --tooltip-color: hsl(0, 0%, 30%);
+    --arrow-color: var(--tooltip-color);
+    --tooltip-arrow-size: 15px;
+
+    position: absolute;
+    /* Biar ada space between the tooltip sama gambar, otherwise nempel */
+    top: -1rem;
+    left: 50%;
+    /* Translate ke kiri 50% dr content, biar yg ditengah bkn dr |Stupid Cat tpi Stupi|d Cat */
+    /* 0 is the fallback value, klo translate-y ga didefine */
+    transform: translate(-50%, var(--translate-y, 0)) scale(var(--scale));
+    transition: 200ms transform;
+    transform-origin: bottom center;
+}
+
+.pic::before {
+    --translate-y: calc(-70% - var(--tooltip-arrow-size));
+
+    content: attr(data-tooltip);
+    font-size: 1.2rem;
+    color: white;
+    background-color: var(--tooltip-color);
+    width: max-content;
+    /* Max is the length of the pic */
+    max-width: 100%;
+    padding: .5em;
+    border-radius: .5em;
+    text-align: center;
+}
+
+.pic::after {
+    --translate-y: calc(-.2 * var(--tooltip-arrow-size));
+
+    content: "";
+    /* CSS borders are triangle shaped */
+    border: var(--tooltip-arrow-size) solid transparent;
+    /* Results in upside down triangle */
+    border-top-color: var(--tooltip-color);
+    transform-origin: top center;
+}
+
+.pic:hover::before,
+.pic:hover::after {
+    --scale: 1;
+}
